@@ -1,18 +1,18 @@
 [
   {
-    "card": "001",
-    "pin": "1111",
+    "card_number": "001",
+    "pin": "0000",
     "name": "علی رضایی",
     "balance": 250000,
     "debt": 50000,
-    "renewal": "1404/08/15"
+    "renewal_days_left": 10
   },
   {
-    "card": "002",
-    "pin": "2222",
-    "name": "زهرا احمدی",
-    "balance": 400000,
+    "card_number": "002",
+    "pin": "1234",
+    "name": "محمدحسین مهدوی",
+    "balance": 1000000,
     "debt": 0,
-    "renewal": "1404/08/18"
+    "renewal_days_left": 12
   }
 ]
