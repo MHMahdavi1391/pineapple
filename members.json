@@ -1,18 +1,18 @@
 [
   {
-    "card_number": "001",
-    "pin": "0000",
+    "card": "123456",
+    "pin": "1234",
     "name": "علی رضایی",
     "balance": 250000,
     "debt": 50000,
-    "renewal_days_left": 10
+    "renewal": "2025-11-20T00:00:00Z"
   },
   {
-    "card_number": "002",
-    "pin": "1234",
+    "card": "789123",
+    "pin": "4321",
     "name": "محمدحسین مهدوی",
     "balance": 1000000,
     "debt": 0,
-    "renewal_days_left": 12
+    "renewal": "2025-11-25T00:00:00Z"
   }
 ]
