@@ -145,11 +145,40 @@
   </footer>
 
   <script>
-    const membersUrl = '/members.json';
-    function formatCurrency(n){ return (typeof n==='number' ? n.toLocaleString('fa-IR') : n) + ' تومان'; }
-    function daysUntil(iso){ try{ const d = new Date(iso); const now = new Date(); const diff = Math.ceil((d - now)/(1000*60*60*24)); return diff; }catch(e){return null} }
+    // --- تنظیم: مسیر فایل JSON (نسبی) ---
+    const membersUrl = 'members.json'; // فایل members.json را کنار index.html قرار بده
 
-    async function loadMembers(){ try{ const res = await fetch(membersUrl, {cache:'no-store'}); if(!res.ok) throw new Error('failed'); return await res.json(); }catch(e){ document.getElementById('error').textContent = 'امکان بارگذاری اطلاعات اعضا وجود ندارد. لطفا فایل members.json را در ریشه سایت قرار دهید.'; return []; } }
+    function formatCurrency(n){ return (typeof n==='number' ? n.toLocaleString('fa-IR') : n) + ' تومان'; }
+
+    // اگر در JSON به جای تاریخ، تعداد روز مانده ذخیره شده باشد (renewal_days_left)
+    // آن را مستقیم نمایش می‌کنیم. در غیر این صورت اگر کلید renewal (ISO) وجود داشت، روزها را محاسبه می‌کنیم.
+    function getDaysLeft(member){
+      // اولویت: renewal_days_left (عدد کامل) اگر موجود باشد
+      if (member.hasOwnProperty('renewal_days_left') && (typeof member.renewal_days_left === 'number' || !isNaN(Number(member.renewal_days_left)))) {
+        return Number(member.renewal_days_left);
+      }
+      // fallback: اگر renewal به صورت تاریخ ISO موجود باشد، همان محاسبه قبلی
+      if (member.renewal) {
+        try {
+          const d = new Date(member.renewal);
+          const now = new Date();
+          const diff = Math.ceil((d - now)/(1000*60*60*24));
+          return diff;
+        } catch(e) { return null; }
+      }
+      return null;
+    }
+
+    async function loadMembers(){ 
+      try{ 
+        const res = await fetch(membersUrl, {cache:'no-store'}); 
+        if(!res.ok) throw new Error('failed'); 
+        return await res.json(); 
+      }catch(e){ 
+        document.getElementById('error').textContent = 'امکان بارگذاری اطلاعات اعضا وجود ندارد. لطفا فایل members.json را در ریشه سایت قرار دهید.'; 
+        return []; 
+      } 
+    }
 
     document.getElementById('loginBtn').addEventListener('click', async ()=>{
       document.getElementById('error').textContent='';
@@ -166,7 +195,7 @@
       document.getElementById('memberCard').textContent = 'شماره کارت: ' + matched.card;
       document.getElementById('balanceVal').textContent = formatCurrency(matched.balance||0);
       document.getElementById('debtVal').textContent = formatCurrency(matched.debt||0);
-      const days = daysUntil(matched.renewal);
+      const days = getDaysLeft(matched);
       document.getElementById('renewVal').textContent = (days!==null? (days+' روز') : '—');
       sessionStorage.setItem('pine_member', matched.card);
     });
@@ -180,19 +209,35 @@
 
     // demo button shows sample member if members.json missing
     document.getElementById('demoBtn').addEventListener('click', ()=>{
-      const sample = {card:'000000', name:'نمونه کاربر', balance:350000, debt:20000, renewal:new Date(Date.now()+6*24*3600).toISOString()};
+      const sample = {card:'000000', name:'نمونه کاربر', balance:350000, debt:20000, renewal_days_left:6};
       document.getElementById('welcomePanel').style.display='none';
       document.getElementById('accountPanel').style.display='block';
       document.getElementById('memberName').textContent = sample.name;
       document.getElementById('memberCard').textContent = 'شماره کارت: ' + sample.card;
       document.getElementById('balanceVal').textContent = formatCurrency(sample.balance);
       document.getElementById('debtVal').textContent = formatCurrency(sample.debt);
-      document.getElementById('renewVal').textContent = Math.ceil((new Date(sample.renewal)-new Date())/(1000*60*60*24)) + ' روز';
+      document.getElementById('renewVal').textContent = sample.renewal_days_left + ' روز';
     });
 
     // auto-login from session
-    (async function(){ const members = await loadMembers(); const sessionCard = sessionStorage.getItem('pine_member'); if(sessionCard && members.length){ const m = members.find(x=>String(x.card)===String(sessionCard)); if(m){ document.getElementById('welcomePanel').style.display='none'; document.getElementById('accountPanel').style.display='block'; document.getElementById('memberName').textContent = m.name; document.getElementById('memberCard').textContent = 'شماره کارت: ' + m.card; document.getElementById('balanceVal').textContent = formatCurrency(m.balance||0); document.getElementById('debtVal').textContent = formatCurrency(m.debt||0); const days = daysUntil(m.renewal); document.getElementById('renewVal').textContent = (days!==null? (days+' روز') : '—'); } }
+    (async function(){
+      const members = await loadMembers();
+      const sessionCard = sessionStorage.getItem('pine_member');
+      if(sessionCard && members.length){
+        const m = members.find(x=>String(x.card)===String(sessionCard));
+        if(m){
+          document.getElementById('welcomePanel').style.display='none';
+          document.getElementById('accountPanel').style.display='block';
+          document.getElementById('memberName').textContent = m.name;
+          document.getElementById('memberCard').textContent = 'شماره کارت: ' + m.card;
+          document.getElementById('balanceVal').textContent = formatCurrency(m.balance||0);
+          document.getElementById('debtVal').textContent = formatCurrency(m.debt||0);
+          const days = getDaysLeft(m);
+          document.getElementById('renewVal').textContent = (days!==null? (days+' روز') : '—');
+        }
+      }
     })();
   </script>
 </body>
 </html>
+
