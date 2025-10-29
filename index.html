@@ -5,139 +5,194 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Pineapple | پاین اپل</title>
   <style>
-    body {
-      font-family: 'Vazirmatn', sans-serif;
-      background-color: #ffeb3b;
-      color: #111;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      min-height: 100vh;
+    /* Palette: soft pineapple yellow + warm neutrals */
+    :root{
+      --bg1: #fff9e6; /* light warm */
+      --accent: #f6c94d; /* soft pineapple yellow */
+      --accent-deep: #f0b429;
+      --glass: rgba(255,255,255,0.55);
+      --glass-2: rgba(11,11,11,0.06);
+      --text: #111213;
+      --muted: rgba(17,18,19,0.65);
+      --shadow: 0 10px 30px rgba(11,11,11,0.08);
+      --radius: 14px;
     }
-    header {
-      background-color: #111;
-      color: #ffeb3b;
-      text-align: center;
-      padding: 20px;
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family: 'Vazirmatn', 'Noto Sans', Tahoma, sans-serif;background:linear-gradient(180deg,var(--bg1),#fff);color:var(--text);-webkit-font-smoothing:antialiased}
+
+    /* Subtle animated radial highlight */
+    body::before{
+      content:"";position:fixed;left:-20%;top:-30%;width:70vmax;height:70vmax;pointer-events:none;z-index:0;background:radial-gradient(circle at 30% 30%, rgba(246,201,77,0.08), transparent 18%), radial-gradient(circle at 70% 70%, rgba(16,16,16,0.02), transparent 20%);
+      transform:rotate(8deg);filter:blur(18px);animation:float 18s linear infinite;
     }
-    header h1 {
-      font-size: 2.5em;
-      margin: 0;
+
+    @keyframes float{0%{transform:translateY(0) rotate(0deg)}50%{transform:translateY(6px) rotate(1deg)}100%{transform:translateY(0) rotate(0deg)}}
+
+    header{position:relative;z-index:2;padding:28px 18px;text-align:center}
+    .brand-en{font-size:46px;font-weight:800;color:var(--text);margin:0;letter-spacing:2px}
+    .brand-fa{font-size:14px;color:var(--muted);margin-top:4px}
+
+    main{min-height:calc(100vh - 150px);display:flex;align-items:center;justify-content:center;padding:28px}
+
+    /* glass card */
+    .card{width:100%;max-width:980px;background:linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.85));backdrop-filter: blur(8px) saturate(120%);border-radius:var(--radius);box-shadow:var(--shadow);display:flex;gap:20px;padding:22px;position:relative;overflow:visible}
+
+    /* left: login */
+    .left{flex:1;min-width:280px}
+    .right{width:360px;min-width:260px}
+
+    h2{margin:0 0 12px 0;font-size:20px}
+    label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+    input{width:100%;padding:12px;border-radius:10px;border:1px solid rgba(0,0,0,0.06);font-size:15px;background:rgba(255,255,255,0.7);transition:all .18s ease}
+    input:focus{outline:none;transform:translateY(-2px);box-shadow:0 8px 20px rgba(240,180,30,0.08), inset 0 1px 0 rgba(255,255,255,0.6)}
+
+    .muted{color:var(--muted);font-size:13px}
+
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;border:none;background:var(--text);color:var(--accent);font-weight:700;cursor:pointer;transition:transform .12s ease}
+    .btn:active{transform:translateY(1px)}
+
+    /* account summary */
+    .profile{background:linear-gradient(180deg, rgba(255,255,255,0.95), rgba(255,255,255,0.9));padding:18px;border-radius:12px;box-shadow:0 6px 18px rgba(0,0,0,0.04);text-align:center}
+    .member-name{font-size:20px;font-weight:800;margin-bottom:6px}
+    .small{font-size:13px;color:var(--muted)}
+
+    .stats{display:flex;gap:12px;margin-top:14px;justify-content:center}
+    .stat{background:linear-gradient(180deg,#ffffff, rgba(255,255,255,0.92));padding:12px;border-radius:10px;min-width:110px;box-shadow:0 6px 18px rgba(11,11,11,0.03)}
+    .stat .label{font-size:12px;color:var(--muted)}
+    .stat .value{font-size:16px;font-weight:800;margin-top:6px}
+
+    .notice{margin-top:12px;font-size:13px;color:var(--muted);text-align:center}
+
+    footer{padding:18px;text-align:center;color:var(--muted);font-size:13px}
+    footer b{color:var(--text)}
+
+    /* responsive */
+    @media (max-width:880px){
+      .card{flex-direction:column;padding:16px}
+      .right{width:100%}
+      .brand-en{font-size:36px}
     }
-    header h2 {
-      font-size: 1em;
-      margin: 5px 0 0 0;
-    }
-    main {
-      flex-grow: 1;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    form {
-      background: #fff;
-      padding: 20px;
-      border-radius: 15px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.3);
-      width: 90%;
-      max-width: 350px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    input {
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 1em;
-    }
-    button {
-      padding: 10px;
-      background-color: #111;
-      color: #ffeb3b;
-      border: none;
-      border-radius: 8px;
-      font-size: 1em;
-      cursor: pointer;
-    }
-    button:hover {
-      background-color: #333;
-    }
-    footer {
-      text-align: center;
-      background: #111;
-      color: #ffeb3b;
-      padding: 10px;
-      font-size: 0.9em;
-    }
-    #info {
-      display: none;
-      background: #fff;
-      padding: 20px;
-      border-radius: 15px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.3);
-      width: 90%;
-      max-width: 400px;
-      margin: 20px auto;
-    }
+
+    /* subtle entrance animations */
+    .card{opacity:0;transform:translateY(8px) scale(0.998);animation:cardIn .45s cubic-bezier(.2,.9,.3,1) forwards}
+    @keyframes cardIn{to{opacity:1;transform:none}}
+    .fadeIn{opacity:0;transform:translateY(6px);animation:fadeIn .45s ease forwards}
+    .fadeIn.delay{animation-delay:.08s}
+    @keyframes fadeIn{to{opacity:1;transform:none}}
+
   </style>
 </head>
 <body>
   <header>
-    <h1>Pineapple</h1>
-    <h2>پاین اپل</h2>
+    <div class="brand-en">pineapple</div>
+    <div class="brand-fa">پاین اپل</div>
   </header>
 
   <main>
-    <form id="loginForm">
-      <label>شماره کارت:</label>
-      <input type="text" id="cardNumber" placeholder="شماره کارت" required>
-      <label>رمز ۴ رقمی:</label>
-      <input type="password" id="pin" placeholder="رمز" maxlength="4" required>
-      <button type="submit">ورود</button>
-    </form>
+    <div class="card">
+      <div class="left">
+        <h2 class="fadeIn">ورود اعضا</h2>
+        <form id="loginForm" class="fadeIn delay" onsubmit="return false;" style="margin-top:10px">
+          <label for="card">شماره کارت عضو</label>
+          <input id="card" name="card" type="text" inputmode="numeric" maxlength="20" placeholder="مثال: 123456789012">
+
+          <label for="pin" style="margin-top:10px">رمز چهار رقمی</label>
+          <input id="pin" name="pin" type="password" inputmode="numeric" maxlength="4" placeholder="مثال: 1234">
+
+          <div style="margin-top:12px;display:flex;gap:10px;align-items:center">
+            <button id="loginBtn" class="btn" type="button">ورود</button>
+            <div class="muted">QR کارت را اسکن کنید یا شماره کارت را وارد کنید</div>
+          </div>
+          <div id="error" class="notice" style="color:#b00020"></div>
+
+          <div style="margin-top:16px" class="muted">همه پرداخت‌ها و دریافت‌ها به صورت <strong>نقدی</strong> و تحویل به مدیر انجام می‌شود.</div>
+        </form>
+      </div>
+
+      <div class="right">
+        <div id="accountPanel" style="display:none">
+          <div class="profile fadeIn">
+            <div class="member-name" id="memberName">—</div>
+            <div class="small" id="memberCard">شماره کارت: —</div>
+            <div class="stats">
+              <div class="stat"><div class="label">موجودی</div><div class="value" id="balanceVal">0 تومان</div></div>
+              <div class="stat"><div class="label">بدهی</div><div class="value" id="debtVal">0 تومان</div></div>
+              <div class="stat"><div class="label">مانده تا تمدید</div><div class="value" id="renewVal">— روز</div></div>
+            </div>
+            <div style="margin-top:12px;display:flex;gap:8px;justify-content:center">
+              <button id="logoutBtn" class="btn">خروج</button>
+            </div>
+            <div class="notice">برای مسائل مدیریتی با مدیر تماس بگیرید: <strong>09362335266</strong></div>
+          </div>
+        </div>
+
+        <div id="welcomePanel" style="display:block">
+          <div class="profile fadeIn">
+            <div style="font-size:18px;font-weight:700;margin-bottom:6px">خوش آمدید به پاین‌اپل</div>
+            <div class="small">وضعیت حساب خود را با ورود مشاهده کنید — کارت و رمز خود را وارد کنید یا QR را اسکن کنید.</div>
+            <div style="margin-top:12px;text-align:center">
+              <button id="demoBtn" class="btn" style="background:var(--accent-deep);color:#111">مشاهده نمونه</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
   </main>
 
-  <section id="info">
-    <h3>اطلاعات حساب</h3>
-    <p id="memberName"></p>
-    <p id="balance"></p>
-    <p id="debt"></p>
-    <p id="renewal"></p>
-  </section>
-
   <footer>
-    تمام حقوق متعلق به شرکت <b>Pineapple</b> (پاین اپل) می‌باشد.<br>
-    شماره تماس مدیریت: 09362335266
+    تمام حقوق متعلق به شرکت <b>pineapple</b> (پاین اپل) می‌باشد — مدیر: 09362335266
   </footer>
 
   <script>
-    async function fetchMembers() {
-      const res = await fetch('members.json');
-      return await res.json();
-    }
+    const membersUrl = '/members.json';
+    function formatCurrency(n){ return (typeof n==='number' ? n.toLocaleString('fa-IR') : n) + ' تومان'; }
+    function daysUntil(iso){ try{ const d = new Date(iso); const now = new Date(); const diff = Math.ceil((d - now)/(1000*60*60*24)); return diff; }catch(e){return null} }
 
-    document.getElementById('loginForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const cardNumber = document.getElementById('cardNumber').value;
-      const pin = document.getElementById('pin').value;
-      const members = await fetchMembers();
-      const member = members.find(m => m.card === cardNumber && m.pin === pin);
+    async function loadMembers(){ try{ const res = await fetch(membersUrl, {cache:'no-store'}); if(!res.ok) throw new Error('failed'); return await res.json(); }catch(e){ document.getElementById('error').textContent = 'امکان بارگذاری اطلاعات اعضا وجود ندارد. لطفا فایل members.json را در ریشه سایت قرار دهید.'; return []; } }
 
-      if (!member) {
-        alert('شماره کارت یا رمز اشتباه است.');
-        return;
-      }
-
-      document.getElementById('loginForm').style.display = 'none';
-      document.getElementById('info').style.display = 'block';
-      document.getElementById('memberName').innerText = `نام عضو: ${member.name}`;
-      document.getElementById('balance').innerText = `موجودی حساب: ${member.balance.toLocaleString()} تومان`;
-      document.getElementById('debt').innerText = `بدهی: ${member.debt.toLocaleString()} تومان`;
-      document.getElementById('renewal').innerText = `تمدید بعدی: ${member.renewal}`;
+    document.getElementById('loginBtn').addEventListener('click', async ()=>{
+      document.getElementById('error').textContent='';
+      const card = (document.getElementById('card').value||'').trim();
+      const pin = (document.getElementById('pin').value||'').trim();
+      if(!card || pin.length!==4){ document.getElementById('error').textContent='لطفا شماره کارت و رمز ۴ رقمی را وارد کنید.'; return; }
+      const members = await loadMembers(); if(!members.length) return;
+      const matched = members.find(m => String(m.card)===String(card) && String(m.pin)===String(pin));
+      if(!matched){ document.getElementById('error').textContent='اطلاعات وارد شده معتبر نیست.'; return; }
+      // show account
+      document.getElementById('welcomePanel').style.display='none';
+      document.getElementById('accountPanel').style.display='block';
+      document.getElementById('memberName').textContent = matched.name;
+      document.getElementById('memberCard').textContent = 'شماره کارت: ' + matched.card;
+      document.getElementById('balanceVal').textContent = formatCurrency(matched.balance||0);
+      document.getElementById('debtVal').textContent = formatCurrency(matched.debt||0);
+      const days = daysUntil(matched.renewal);
+      document.getElementById('renewVal').textContent = (days!==null? (days+' روز') : '—');
+      sessionStorage.setItem('pine_member', matched.card);
     });
+
+    document.getElementById('logoutBtn').addEventListener('click', ()=>{
+      sessionStorage.removeItem('pine_member');
+      document.getElementById('accountPanel').style.display='none';
+      document.getElementById('welcomePanel').style.display='block';
+      document.getElementById('card').value=''; document.getElementById('pin').value=''; document.getElementById('error').textContent='';
+    });
+
+    // demo button shows sample member if members.json missing
+    document.getElementById('demoBtn').addEventListener('click', ()=>{
+      const sample = {card:'000000', name:'نمونه کاربر', balance:350000, debt:20000, renewal:new Date(Date.now()+6*24*3600).toISOString()};
+      document.getElementById('welcomePanel').style.display='none';
+      document.getElementById('accountPanel').style.display='block';
+      document.getElementById('memberName').textContent = sample.name;
+      document.getElementById('memberCard').textContent = 'شماره کارت: ' + sample.card;
+      document.getElementById('balanceVal').textContent = formatCurrency(sample.balance);
+      document.getElementById('debtVal').textContent = formatCurrency(sample.debt);
+      document.getElementById('renewVal').textContent = Math.ceil((new Date(sample.renewal)-new Date())/(1000*60*60*24)) + ' روز';
+    });
+
+    // auto-login from session
+    (async function(){ const members = await loadMembers(); const sessionCard = sessionStorage.getItem('pine_member'); if(sessionCard && members.length){ const m = members.find(x=>String(x.card)===String(sessionCard)); if(m){ document.getElementById('welcomePanel').style.display='none'; document.getElementById('accountPanel').style.display='block'; document.getElementById('memberName').textContent = m.name; document.getElementById('memberCard').textContent = 'شماره کارت: ' + m.card; document.getElementById('balanceVal').textContent = formatCurrency(m.balance||0); document.getElementById('debtVal').textContent = formatCurrency(m.debt||0); const days = daysUntil(m.renewal); document.getElementById('renewVal').textContent = (days!==null? (days+' روز') : '—'); } }
+    })();
   </script>
 </body>
 </html>
-
