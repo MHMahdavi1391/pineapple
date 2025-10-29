@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pineapple | پاین اپل</title>
+  <style>
+    body {
+      font-family: 'Vazirmatn', sans-serif;
+      background-color: #ffeb3b;
+      color: #111;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header {
+      background-color: #111;
+      color: #ffeb3b;
+      text-align: center;
+      padding: 20px;
+    }
+    header h1 {
+      font-size: 2.5em;
+      margin: 0;
+    }
+    header h2 {
+      font-size: 1em;
+      margin: 5px 0 0 0;
+    }
+    main {
+      flex-grow: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    form {
+      background: #fff;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      width: 90%;
+      max-width: 350px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    input {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1em;
+    }
+    button {
+      padding: 10px;
+      background-color: #111;
+      color: #ffeb3b;
+      border: none;
+      border-radius: 8px;
+      font-size: 1em;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #333;
+    }
+    footer {
+      text-align: center;
+      background: #111;
+      color: #ffeb3b;
+      padding: 10px;
+      font-size: 0.9em;
+    }
+    #info {
+      display: none;
+      background: #fff;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.3);
+      width: 90%;
+      max-width: 400px;
+      margin: 20px auto;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Pineapple</h1>
+    <h2>پاین اپل</h2>
+  </header>
+
+  <main>
+    <form id="loginForm">
+      <label>شماره کارت:</label>
+      <input type="text" id="cardNumber" placeholder="شماره کارت" required>
+      <label>رمز ۴ رقمی:</label>
+      <input type="password" id="pin" placeholder="رمز" maxlength="4" required>
+      <button type="submit">ورود</button>
+    </form>
+  </main>
+
+  <section id="info">
+    <h3>اطلاعات حساب</h3>
+    <p id="memberName"></p>
+    <p id="balance"></p>
+    <p id="debt"></p>
+    <p id="renewal"></p>
+  </section>
+
+  <footer>
+    تمام حقوق متعلق به شرکت <b>Pineapple</b> (پاین اپل) می‌باشد.<br>
+    شماره تماس مدیریت: 09362335266
+  </footer>
+
+  <script>
+    async function fetchMembers() {
+      const res = await fetch('members.json');
+      return await res.json();
+    }
+
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const cardNumber = document.getElementById('cardNumber').value;
+      const pin = document.getElementById('pin').value;
+      const members = await fetchMembers();
+      const member = members.find(m => m.card === cardNumber && m.pin === pin);
+
+      if (!member) {
+        alert('شماره کارت یا رمز اشتباه است.');
+        return;
+      }
+
+      document.getElementById('loginForm').style.display = 'none';
+      document.getElementById('info').style.display = 'block';
+      document.getElementById('memberName').innerText = `نام عضو: ${member.name}`;
+      document.getElementById('balance').innerText = `موجودی حساب: ${member.balance.toLocaleString()} تومان`;
+      document.getElementById('debt').innerText = `بدهی: ${member.debt.toLocaleString()} تومان`;
+      document.getElementById('renewal').innerText = `تمدید بعدی: ${member.renewal}`;
+    });
+  </script>
+</body>
+</html>
+
